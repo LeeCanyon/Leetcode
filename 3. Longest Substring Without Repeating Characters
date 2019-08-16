@@ -2,23 +2,23 @@ class Solution {
 public:
     int lengthOfLongestSubstring(string s) {
         int ret=0;
-        string longest;
+        int lhs=0;
         for(int i=0;i<s.size();++i)
         {
-            int pos=longest.find_first_of(s[i]);
+            int pos=string::npos;
+            for(int k=lhs;k<i;k++){
+                if(s[k]==s[i]){
+                    pos=k;
+                    break;
+                }
+            }
             if(pos!=string::npos)
             {
-                
-                ret=ret>longest.size()?ret:longest.size();
-                longest=longest.substr(pos+1);
-                longest+=s[i];
-            }
-            else
-            {
-                longest+=s[i];
+                ret=ret>(i-lhs)?ret:(i-lhs);
+                lhs=pos+1;
             }
         }
-        ret=ret>longest.size()?ret:longest.size();
+        ret=ret>(s.size()-lhs)?ret:(s.size()-lhs);
         return ret;
     }
 };
