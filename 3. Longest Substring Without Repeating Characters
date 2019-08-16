@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int lengthOfLongestSubstring(string s) {
+        int ret=0;
+        string longest;
+        for(int i=0;i<s.size();++i)
+        {
+            int pos=longest.find_first_of(s[i]);
+            if(pos!=string::npos)
+            {
+                
+                ret=ret>longest.size()?ret:longest.size();
+                longest=longest.substr(pos+1);
+                longest+=s[i];
+            }
+            else
+            {
+                longest+=s[i];
+            }
+        }
+        ret=ret>longest.size()?ret:longest.size();
+        return ret;
+    }
+};
