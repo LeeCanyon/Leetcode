@@ -3,19 +3,19 @@ public:
     int lengthOfLongestSubstring(string s) {
         int ret=0;
         int lhs=0;
-        for(int i=0;i<s.size();++i)
+        unordered_map<char,int> ch_lastIndice;                              //using a unordered map to store position of every char appears
+        for(int i=0;i<s.size();++i)                                         // at the very last time.
         {
-            int pos=string::npos;
-            for(int k=lhs;k<i;k++){
-                if(s[k]==s[i]){
-                    pos=k;
-                    break;
-                }
-            }
-            if(pos!=string::npos)
+            auto last_pos=ch_lastIndice.find(s[i]);                         //do not loop in the string to search the position
+            if(last_pos!=ch_lastIndice.end())                               //find it in the map
             {
-                ret=ret>(i-lhs)?ret:(i-lhs);
-                lhs=pos+1;
+                ret=ret>(i-lhs)?ret:(i-lhs);                                
+                lhs=last_pos->second+1;
+                last_pos->second=i;
+            }
+            else
+            {
+                ch_lastIndice.insert({s[i],i});
             }
         }
         ret=ret>(s.size()-lhs)?ret:(s.size()-lhs);
