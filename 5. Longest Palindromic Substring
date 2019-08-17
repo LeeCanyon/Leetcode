@@ -15,6 +15,11 @@ public:
                 palen[i]=palen[2*mid-i];                                        // do not need to find length of palindrome,get it from the mirror.
                 continue;
             }
+            else if(rightbound<i)
+            {
+                palen[i]=0;
+                mid=i;
+            }
             else                                                                // i palindrome's rightbound isn't at the left of mid's
             {
                 palen[i]=rightbound-i;
