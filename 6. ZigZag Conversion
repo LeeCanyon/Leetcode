@@ -1,0 +1,27 @@
+class Solution {
+public:
+    string convert(string s, int numRows) {
+        if(numRows==1)return s;
+        string ret;
+        const int sz=s.size();
+        const int nums_per_group=2*numRows-2;
+        for(int i=0;i<sz;i+=nums_per_group)
+        {
+            ret+=s[i];
+        }
+        for(int row=2;row<numRows;++row)
+        {
+            for(int i=row-1;i<sz;i+=nums_per_group)
+            {
+                ret+=s[i];
+                if(i+nums_per_group-2*(row-1)<sz)
+                    ret+=s[i+nums_per_group-2*(row-1)];
+            }
+        }
+        for(int i=numRows-1;i<sz;i+=nums_per_group)
+        {
+            ret+=s[i];
+        }
+        return ret;
+    }
+};
