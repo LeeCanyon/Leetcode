@@ -1,0 +1,64 @@
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        double ret;
+        if(nums1.size()>nums2.size())
+        {
+            swap(nums1,nums2);
+        }
+        int sz1=nums1.size();
+        int sz2=nums2.size();
+        int halflen=(sz1+sz2)/2;
+        int min1_indice=0;                                              //mid1's min possible position start as 0;
+        int max1_indice=sz1;                                            //mid1's max possible position start as sz1;
+        while(min1_indice<=max1_indice)
+        {
+            int mid1=(min1_indice+max1_indice)/2;                       //mid1 at the middle position may be possible 
+            int mid2=halflen-mid1;                                      //left and right of two arrays having the same numbers of int;
+            if(mid1!=0&&nums1[mid1-1]>nums2[mid2])                      //there's a larger number in nums1's left than in nums2's right 
+            {
+                max1_indice=mid1-1;
+            }
+            else if(mid1!=sz1&&nums1[mid1]<nums2[mid2-1])               //there's a larger number in nums2's left than in nums1's right
+            {
+                min1_indice=mid1+1;
+            }
+            else                                                        //mid1 and mid2 at the correct position
+            {
+                int rightmin=0;
+                if(mid1==sz1)                                           //mid1 reach upper bound
+                {
+                    rightmin=nums2[mid2];
+                }
+                else if(mid2==sz2)                                      //mid2 reach upper bound
+                {
+                    rightmin=nums1[mid1];
+                }
+                else 
+                {
+                    rightmin=min(nums1[mid1],nums2[mid2]);
+                }
+                if((sz1+sz2)&1)                                         //if number of ints is odd
+                {
+                    return rightmin;
+                }
+                int leftmax=0;
+                if(mid1==0)                                             //mid1 reach lower bound
+                {
+                    leftmax=nums2[mid2-1];                        
+                }
+                else if(mid2==0)                                        //mid2 reach lower bound
+                {
+                    leftmax=nums1[mid1-1];
+                }
+                else
+                {
+                    leftmax=max(nums1[mid1-1],nums2[mid2-1]);
+                }
+                ret=(leftmax+rightmin)/2.0;
+                break;
+            }
+        }
+        return ret;
+    }
+};
