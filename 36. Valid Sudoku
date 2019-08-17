@@ -2,57 +2,30 @@ class Solution {
 public:
     bool isValidSudoku(vector<vector<char>>& board) {
         enum{SIDE_LENGTH=9};
+        enum{DIGIT_NUMS=9};
         enum{BOX_LENGTH=3};
-        vector<bool> digit_exist(SIDE_LENGTH,false);
-        for(int row=0;row<SIDE_LENGTH;++row)
+        enum{ROW=0,COLUMN=1,BOX=2,CELL_RCB=3};
+        bool digit_exist[CELL_RCB][SIDE_LENGTH][DIGIT_NUMS]{};                      //make a bool table  to record every digit appears or
+        for(int row=0;row<SIDE_LENGTH;++row)                                        //not in every row, column and box.
         {
             for(int column=0;column<SIDE_LENGTH;++column)
             {
                 if(board[row][column]!='.')
                 {
                     int digit=static_cast<int>(board[row][column]-'1');
-                    if(!digit_exist[digit])
-                        digit_exist[digit]=true;
-                    else
+                    if(digit_exist[ROW][column][digit])
                         return false;
-                }
-            }
-            digit_exist=vector<bool>(SIDE_LENGTH,false);
-        }
-        for(int column=0;column<SIDE_LENGTH;++column)
-        {
-            for(int row=0;row<SIDE_LENGTH;++row)
-            {
-                if(board[row][column]!='.')
-                {
-                    int digit=static_cast<int>(board[row][column]-'1');
-                    if(!digit_exist[digit])
-                        digit_exist[digit]=true;
                     else
+                        digit_exist[ROW][column][digit]=true;
+                    if(digit_exist[COLUMN][row][digit])
                         return false;
+                    else
+                        digit_exist[COLUMN][row][digit]=true;
+                    if(digit_exist[BOX][row/3*3+column/3][digit])
+                        return false;
+                    else
+                        digit_exist[BOX][row/3*3+column/3][digit]=true;
                 }
-            }
-            digit_exist=vector<bool>(SIDE_LENGTH,false);
-        }
-        for(int row=0;row<SIDE_LENGTH;row+=BOX_LENGTH)
-        {
-            for(int column=0;column<SIDE_LENGTH;column+=BOX_LENGTH)
-            {     
-                for(int box_row=0;box_row<BOX_LENGTH;box_row++)
-                {
-                    for(int box_column=0;box_column<BOX_LENGTH;box_column++)
-                    {
-                        if(board[row+box_row][column+box_column]!='.')
-                        {
-                            int digit=static_cast<int>(board[row+box_row][column+box_column]-'1');
-                            if(!digit_exist[digit])
-                                digit_exist[digit]=true;
-                            else
-                                return false;
-                        }
-                    }
-                }
-                digit_exist=vector<bool>(SIDE_LENGTH,false);
             }
         }
         return true;
