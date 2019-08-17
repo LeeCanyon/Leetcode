@@ -1,0 +1,49 @@
+class Solution {
+public:
+    string longestPalindrome(string s) {
+        if(s.size()<=1) return s;
+        string s_processed(process(s));
+        int sz=s_processed.size();
+        vector<int>palen(sz,0);
+        int mid=1;
+        for(int i=1;i<sz;++i)
+        {
+            if(palen[mid]+mid<=i)
+            {
+                mid=i;
+            }
+            else if(palen[mid]+mid>palen[2*mid-i]+i)
+                palen[i]=palen[2*mid-i];
+            else 
+            {
+                palen[i]=palen[mid]+mid-i;
+                mid=i;
+            }
+            ++palen[i];
+            while(i+palen[i]<sz&&s_processed[i+palen[i]]==s_processed[i-palen[i]])
+            {
+                ++palen[i];
+            }
+            --palen[i];
+        }
+        int longest_sub_indice=1;
+        for(int i=1;i<palen.size();++i)
+        {
+            if(palen[i]>palen[longest_sub_indice])
+                longest_sub_indice=i;
+        }
+        string longest_sub=
+            s.substr((longest_sub_indice-palen[longest_sub_indice])/2,palen[longest_sub_indice]);
+        return longest_sub;
+    }
+    string process (string s){
+        string ret;
+        ret+='$';
+        ret+='#';
+        for(auto ch:s){
+            ret+=ch;
+            ret+='#';
+        }
+        return ret;
+    }
+};
