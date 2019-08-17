@@ -2,41 +2,37 @@ class Solution {
 public:
     string longestPalindrome(string s) {
         if(s.size()<=1) return s;
-        string s_processed(process(s));
-        int sz=s_processed.size();
-        vector<int>palen(sz,0);
-        int mid=1;
-        for(int i=1;i<sz;++i)
+        string s_processed(process(s));                                         // preprocess the string
+        const int sz=s_processed.size();
+        vector<int>palen(sz,0);                                                 // to record the lengths every character as the center of palindrome
+        int mid=1;                                                              // mid is the center of palindrome of which the rightbound is rightmost;
+        int longest_sub_indice=1;
+        for(int i=1;i<sz;++i)                                                   // i as the center of palindrome
         {
-            if(palen[mid]+mid<=i)
+            int rightbound=palen[mid]+mid;                                      // every char as the very next char at the right of rightbound compares once
+            if(rightbound>palen[2*mid-i]+i)                                     // i palindrome's rightbound is at the left of mid's
             {
+                palen[i]=palen[2*mid-i];                                        // do not need to find length of palindrome,get it from the mirror.
+                continue;
+            }
+            else                                                                // i palindrome's rightbound isn't at the left of mid's
+            {
+                palen[i]=rightbound-i;
                 mid=i;
             }
-            else if(palen[mid]+mid>palen[2*mid-i]+i)
-                palen[i]=palen[2*mid-i];
-            else 
-            {
-                palen[i]=palen[mid]+mid-i;
-                mid=i;
-            }
-            ++palen[i];
-            while(i+palen[i]<sz&&s_processed[i+palen[i]]==s_processed[i-palen[i]])
-            {
+            ++palen[i];                                                         
+            while(i+palen[i]<sz
+                  &&s_processed[i+palen[i]]==s_processed[i-palen[i]])           // every char at next to rightbound examed if ok become new rightbound 
+            {                                                                   
                 ++palen[i];
             }
             --palen[i];
-        }
-        int longest_sub_indice=1;
-        for(int i=1;i<palen.size();++i)
-        {
-            if(palen[i]>palen[longest_sub_indice])
+            if(palen[i]>palen[longest_sub_indice])                              //test if it is the longest palindrome
                 longest_sub_indice=i;
         }
-        string longest_sub=
-            s.substr((longest_sub_indice-palen[longest_sub_indice])/2,palen[longest_sub_indice]);
-        return longest_sub;
+        return s.substr((longest_sub_indice-palen[longest_sub_indice])/2,palen[longest_sub_indice]);
     }
-    string process (string s){
+    string process (string s){                                                  //preprocess to remove the difference of odd and even chars
         string ret;
         ret+='$';
         ret+='#';
