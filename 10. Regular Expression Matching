@@ -1,0 +1,43 @@
+/*
+Given an input string (s) and a pattern (p), implement regular expression matching with support for '.' and '*'.
+
+'.' Matches any single character.
+'*' Matches zero or more of the preceding element.
+The matching should cover the entire input string (not partial).
+
+Note:
+
+s could be empty and contains only lowercase letters a-z.
+p could be empty and contains only lowercase letters a-z, and characters like . or *.
+*/
+
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int rs=s.size()-1;                                                  //bottom up
+        int rp=p.size()-1;
+        while(rp!=-1)
+        {
+            if(rs!=-1&&(p[rp]==s[rs]||p[rp]=='.'))  { --rs; --rp;}
+            else if(p[rp]=='*')
+            {
+                rp--;char star=p[rp];rp--;
+                do                                                          // * can mean zero element, so match it once before condition statement
+                {
+                    if(isMatch(s.substr(0,rs+1),p.substr(0,rp+1)))
+                        return true;
+                    if(rs==-1)
+                        return false;
+                    --rs;
+                }while(p[rp+1]=='.'||p[rp+1]==s[rs+1]);
+                return false;
+            }
+            else
+                return false;
+        }
+        if(rs!=-1)
+            return false;
+        else
+            return true;
+    }
+};
