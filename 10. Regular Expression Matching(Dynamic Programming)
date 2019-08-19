@@ -1,0 +1,34 @@
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        bool** partialMatch=NULL;
+        partialMatch=new bool* [s.size()+1];
+        for(int i=0;i<s.size()+1;++i)
+        {
+            partialMatch[i]=new bool[p.size()+1];
+        }
+        partialMatch[s.size()][p.size()]=true;
+        for(int i=0;i<s.size();++i){
+            partialMatch[i][p.size()]=false;
+        }
+        for(int rs=s.size();rs>=0;--rs)
+        {
+            for(int rp=p.size()-1;rp>=0;--rp)
+            {
+                bool firstMatch=(rs<s.size()&&(p[rp]==s[rs]||p[rp]=='.'));
+                if(rp+1<p.size()&&p[rp+1]=='*')
+                    partialMatch[rs][rp]=partialMatch[rs][rp+2]||firstMatch&&(partialMatch[rs+1][rp]);
+                else
+                    partialMatch[rs][rp]=firstMatch && partialMatch[rs+1][rp+1];
+            }
+        }
+        bool ret=partialMatch[0][0];
+        for(int i=0;i<s.size();++i)
+        {
+            delete[]partialMatch[i];
+        }
+        delete[]partialMatch;
+        partialMatch=NULL;
+        return ret;
+    }
+};
