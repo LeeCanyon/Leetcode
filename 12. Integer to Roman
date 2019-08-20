@@ -1,0 +1,59 @@
+class Solution {
+public:
+    static unordered_map<int,char> valueSymbol;                                     // key:symbols' value, value: symbols
+    static vector<int> romanSymbolValue;                                            // a vector to store all the Roman digits' meaning
+    string intToRoman(int num) {
+        string ret;
+        for(vector<int>::reverse_iterator ri=romanSymbolValue.rbegin();ri!=romanSymbolValue.rend();++ri)
+        {
+            process(num,*ri,ret);                                                   // print symbols means *ri;
+        }
+        return ret;
+    }
+    void process(int& num,int value,string& ret)
+    {
+        int fillerValue=0;                                                          //no IIII or VIIII but a IV and a IX,for I and X is a filler to become a higher symbol
+        int higherValue=0;                                                          //the higher symbol's value
+        if(headOneNotFive(value))                                                   //value 1 10 100 1000
+        {
+            fillerValue=value;
+            higherValue=value*5;
+        }
+        else                                                                        //value 5 50 500 5000
+        {
+            fillerValue=value/5;
+            higherValue=value*2;
+        }
+        if(num+fillerValue>=higherValue)                                            // if a filler is needed
+        {
+            ret+=valueSymbol[fillerValue];
+            num+=fillerValue;
+            ret+=valueSymbol[higherValue];
+            num-=higherValue;
+        }
+        else                                                                        // no filler
+        {
+            while(num-value>=0)
+            {
+                ret+=valueSymbol[value];
+                num-=value;
+            }
+        }
+        return;
+    }
+    bool headOneNotFive(int value)                                                  // to tell 1/10/100/1000 from 5/50/500/5000
+    {
+        while(value/10!=0)
+        {
+            value/=10;
+        }
+        if(value==1)
+            return true;
+        else
+            return false;
+    }
+};
+
+unordered_map<int,char> Solution::valueSymbol=
+    {{1,'I'},{5,'V'},{10,'X'},{50,'L'},{100,'C'},{500,'D'},{1000,'M'}};
+vector<int> Solution::romanSymbolValue={1,5,10,50,100,500,1000};
