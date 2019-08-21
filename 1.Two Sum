@@ -2,15 +2,15 @@ class Solution {
 public:
     vector<int> twoSum(vector<int>& nums, int target) {
         vector<int>ret;
-        unordered_map<int,int> num_indice;
+        unordered_map<int,int> numIndice;
         for(int i=0;i<nums.size();++i){
-            if(num_indice.end()==num_indice.find(target-nums[i]))
+            if(numIndice.end()==numIndice.find(target-nums[i]))
             {
-                num_indice.insert({nums[i],i});
+                numIndice.insert({nums[i],i});
             }    
             else
             {
-                ret.push_back(num_indice.find(target-nums[i])->second);
+                ret.push_back(numIndice.find(target-nums[i])->second);
                 ret.push_back(i);
                 break;
             }
