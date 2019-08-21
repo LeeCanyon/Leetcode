@@ -1,0 +1,38 @@
+class Solution {
+public:
+    static unordered_map<char,int> symbolValue;
+    int romanToInt(string s) {
+        int ret=0;
+        for(int i=0;i+1<s.size();++i)
+        {
+            if(symbolValue[s[i]]>=symbolValue[s[i+1]])
+            {
+                ret+=symbolValue[s[i]];
+            }
+            else if((headOneNotFive(symbolValue[s[i+1]])&&symbolValue[s[i]]==symbolValue[s[i+1]]/10)
+                    ||(!headOneNotFive(symbolValue[s[i+1]])&&symbolValue[s[i]]==symbolValue[s[i+1]]/5))
+            {
+                ret-=symbolValue[s[i]];
+            }
+            else{
+                cerr<<"Not a valid Roman number."<<endl;
+                exit(1);
+            }
+        }
+        ret+=symbolValue[s[s.size()-1]];
+        return ret;
+    }
+    bool headOneNotFive(int value)
+    {
+        while(value/10!=0)
+        {
+            value/=10;
+        }
+        if(value==1)
+            return true;
+        else
+            return false;
+    }
+};
+unordered_map<char,int> Solution::symbolValue=
+    {{'I',1},{'V',5},{'X',10},{'L',50},{'C',100},{'D',500},{'M',1000}};
